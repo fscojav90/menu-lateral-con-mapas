@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.ejemplo.menulateralconmapas.ui.home.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_gallery"
+        android:name="com.ejemplo.menulateralconmapas.ui.gallery.GalleryFragment"
+        android:label="@string/menu_gallery"
+        tools:layout="@layout/fragment_gallery" />
+
+    <fragment
+        android:id="@+id/nav_slideshow"
+        android:name="com.ejemplo.menulateralconmapas.ui.slideshow.SlideshowFragment"
+        android:label="@string/menu_slideshow"
+        tools:layout="@layout/fragment_slideshow" />
+
+    <fragment
+        android:id="@+id/mapaConUbicacionFragment"
+        android:name="com.ejemplo.menulateralconmapas.MapaConUbicacionFragment"
+        android:label="Mapa con ubicacion"
+        tools:layout="@layout/fragment_mapa_con_ubicacion" />
+
+    <fragment
+        android:id="@+id/mapaConRutaFragment"
+        android:name="com.ejemplo.menulateralconmapas.MapaConRutaFragment"
+        android:label="Mapa con ruta"
+        tools:layout="@layout/fragment_mapa_con_ruta" />
+    <fragment
+        android:id="@+id/mapaConRutaUsandoGpsFragment"
+        android:name="com.ejemplo.menulateralconmapas.MapaConRutaUsandoGpsFragment"
+        android:label="Mapa con ruta usando GPS"
+        tools:layout="@layout/fragment_mapa_con_ruta_usando_gps" />
+
+</navigation>
