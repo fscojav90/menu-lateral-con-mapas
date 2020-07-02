@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,20 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class MapaConRutaFragment extends Fragment {
 
@@ -75,7 +91,10 @@ public class MapaConRutaFragment extends Fragment {
                         LatLng destino = new LatLng(latitudDestino, longitudDestino);
                         mMap.addMarker(new MarkerOptions().position(destino).title("Destino"));
 
-
+                        //código ruta
+                        String url = getRequestUrl(origen, destino);
+                        com.ejemplo.menulateralconmapas.MapaConRutaFragment.TaskResquestDirections taskResquestDirections = new com.ejemplo.menulateralconmapas.MapaConRutaFragment.TaskResquestDirections();
+                        taskResquestDirections.execute(url);
 
                     }catch (Exception ex){
                         Toast.makeText(getContext(), "Error: Ubicación inválida", Toast.LENGTH_SHORT).show();
@@ -100,6 +119,139 @@ public class MapaConRutaFragment extends Fragment {
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
+        }
+    }
+
+    //código ruta
+
+    private String getRequestUrl(LatLng origen, LatLng destino) {
+        String resultado = "";
+
+        String string_origen = "origin="+origen.latitude+","+origen.longitude;
+        String string_destino = "destination="+destino.latitude+","+destino.longitude;
+
+        String sensor = "sensor=false";
+        String modo = "mode=driving";
+
+        String param = string_origen+"&"+string_destino+"&"+sensor+"&"+modo;
+        String salida = "json";
+
+        resultado = "https://maps.googleapis.com/maps/api/directions/"+salida+"?"+param;
+
+        //https://maps.googleapis.com/maps/api/directions/json?origin=123,123&destination=456,654&sensor=false&mode=driving
+
+        return resultado;
+    }
+
+    private String requestDirection(String reqUrl) throws IOException {
+        String responseString = "";
+        InputStream inputStream = null;
+        HttpURLConnection httpURLConnection = null;
+
+        try{
+            URL url = new URL(reqUrl);
+            httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.connect();
+
+            inputStream = httpURLConnection.getInputStream();
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+            StringBuffer stringBuffer = new StringBuffer();
+            String linea = "";
+
+            while ((linea = bufferedReader.readLine())!=null){
+                stringBuffer.append(linea);
+            }
+
+            responseString = stringBuffer.toString();
+            bufferedReader.close();
+            inputStreamReader.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(inputStream != null)
+                inputStream.close();
+
+            httpURLConnection.disconnect();
+        }
+
+        return responseString;
+    }
+
+    public class TaskResquestDirections extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String responseString = "";
+
+            try{
+                responseString = requestDirection(strings[0]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return responseString;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            com.ejemplo.menulateralconmapas.MapaConRutaFragment.TaskParser taskParser = new com.ejemplo.menulateralconmapas.MapaConRutaFragment.TaskParser();
+            taskParser.execute(s);
+        }
+    }
+
+    public class TaskParser extends AsyncTask<String, Void, List<List<HashMap<String, String>>>>{
+
+        @Override
+        protected List<List<HashMap<String, String>>> doInBackground(String... strings) {
+            JSONObject jsonObject = null;
+            List<List<HashMap<String, String>>> routes = null;
+
+            try{
+                jsonObject = new JSONObject(strings[0]);
+                DirectionsParser directionsParser = new DirectionsParser();
+                routes = directionsParser.parse(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return routes;
+        }
+
+        @Override
+        protected void onPostExecute(List<List<HashMap<String, String>>> lists) {
+            super.onPostExecute(lists);
+
+            ArrayList points = null;
+
+            PolylineOptions polylineOptions = null;
+
+            for(List<HashMap<String, String>> path : lists){
+                points = new ArrayList();
+                polylineOptions = new PolylineOptions();
+
+                for(HashMap<String, String> point : path){
+                    double lat = Double.parseDouble(point.get("lat"));
+                    double lon = Double.parseDouble(point.get("lon"));
+
+                    points.add(new LatLng(lat, lon));
+                }
+
+                polylineOptions.addAll(points);
+                polylineOptions.width(15);
+                polylineOptions.color(Color.BLUE);
+                polylineOptions.geodesic(true);
+            }
+
+            if(polylineOptions!= null){
+                mMap.addPolyline(polylineOptions);
+            } else{
+                Toast.makeText(getContext(), "Dirección no encontrada", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }
