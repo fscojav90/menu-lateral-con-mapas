@@ -161,7 +161,7 @@ public class MapaConRutaUsandoGpsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_mapa_con_ruta, container, false);
+        return inflater.inflate(R.layout.fragment_mapa_con_ruta_usando_gps, container, false);
     }
 
     @Override

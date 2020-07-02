@@ -21,8 +21,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapaConRutaFragment extends Fragment {
 
-    private EditText etLatitud;
-    private EditText etLongitud;
+    private EditText etLatitudOrigen;
+    private EditText etLongitudOrigen;
+    private EditText etLatitudDestino;
+    private EditText etLongitudDestino;
+
+
     private Button btnBuscar;
     private GoogleMap mMap;
 
@@ -41,11 +45,17 @@ public class MapaConRutaFragment extends Fragment {
         @Override
         public void onMapReady(GoogleMap googleMap) {
             mMap = googleMap;
-            etLatitud = (EditText) getView().findViewById(R.id.etLatitud);
-            etLongitud = (EditText) getView().findViewById(R.id.etLongitud);
+            etLatitudOrigen = (EditText) getView().findViewById(R.id.etLatitudOrigen);
+            etLongitudOrigen = (EditText) getView().findViewById(R.id.etLongitudOrigen);
 
-            etLatitud.setText("-18.478973");
-            etLongitud.setText("-70.320696");
+            etLatitudDestino = (EditText) getView().findViewById(R.id.etLatitudDestino);
+            etLongitudDestino = (EditText) getView().findViewById(R.id.etLongitudDestino);
+
+            etLatitudOrigen.setText("-18.4834105");
+            etLongitudOrigen.setText("-70.3101844");
+
+            etLatitudDestino.setText("-18.478973");
+            etLongitudDestino.setText("-70.320696");
 
             btnBuscar = (Button) getView().findViewById(R.id.btBuscar);
 
@@ -53,12 +63,18 @@ public class MapaConRutaFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     try {
+                        //origen
+                        float latitudOrigen = Float.parseFloat(etLatitudOrigen.getText().toString());
+                        float longitudOrigen = Float.parseFloat(etLongitudOrigen.getText().toString());
+                        LatLng origen = new LatLng(latitudOrigen, longitudOrigen);
+                        mMap.addMarker(new MarkerOptions().position(origen).title("Origen"));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(origen, 16));
+                        //destino
+                        float latitudDestino = Float.parseFloat(etLatitudDestino.getText().toString());
+                        float longitudDestino = Float.parseFloat(etLongitudDestino.getText().toString());
+                        LatLng destino = new LatLng(latitudDestino, longitudDestino);
+                        mMap.addMarker(new MarkerOptions().position(destino).title("Destino"));
 
-                        float latitud = Float.parseFloat(etLatitud.getText().toString());
-                        float longitud = Float.parseFloat(etLongitud.getText().toString());
-                        LatLng marcador = new LatLng(latitud, longitud);
-                        mMap.addMarker(new MarkerOptions().position(marcador).title("Mi marcador"));
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marcador, 16));
 
 
                     }catch (Exception ex){
@@ -75,7 +91,7 @@ public class MapaConRutaFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_mapa_con_ubicacion, container, false);
+        return inflater.inflate(R.layout.fragment_mapa_con_ruta, container, false);
     }
 
     @Override

@@ -11,7 +11,7 @@
     android:orientation="horizontal">
 
     <EditText
-        android:id="@+id/etLatitud"
+        android:id="@+id/etLatitudOrigen"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -20,20 +20,45 @@
         android:inputType="phone" />
 
     <EditText
-        android:id="@+id/etLongitud"
+        android:id="@+id/etLongitudOrigen"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:autofillHints=""
         android:hint="@string/longitud"
         android:inputType="phone" />
-
-    <Button
-        android:id="@+id/btBuscar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/buscar" />
 </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/etLatitudDestino"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:autofillHints=""
+            android:hint="@string/latitud"
+            android:inputType="phone" />
+
+        <EditText
+            android:id="@+id/etLongitudDestino"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:autofillHints=""
+            android:hint="@string/longitud"
+            android:inputType="phone" />
+
+        <Button
+            android:id="@+id/btBuscar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/buscar" />
+    </LinearLayout>
+
 
 <fragment
     android:id="@+id/map"
