@@ -75,6 +75,7 @@ public class MapaConRutaUsandoGpsFragment extends Fragment {
             locationRequest.setFastestInterval(5000);
             locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
+
             actualizarGPS();
 
             //iniciar componentes
@@ -99,6 +100,8 @@ public class MapaConRutaUsandoGpsFragment extends Fragment {
                         LatLng marcador = new LatLng(lat, lng);
                         //título
                         mMap.addMarker(new MarkerOptions().position(marcador).title("Mi marcador"));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marcador, 16));
+
                         //código ruta
                         String url = getRequestUrl(ust, marcador);
 
@@ -153,6 +156,9 @@ public class MapaConRutaUsandoGpsFragment extends Fragment {
 
     private void actualizarUbicacion(Location location) {
         Toast.makeText(getContext(), "Hay conexión con el GPS", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(), "Latitud" + String.valueOf(location.getLatitude()), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(), "Longitud" + String.valueOf(location.getLongitude()), Toast.LENGTH_SHORT).show();
+
 
     }
 

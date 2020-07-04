@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
-
+    app:startDestination="@id/mapaConUbicacionFragment">
+<!--
     <fragment
         android:id="@+id/nav_home"
         android:name="com.ejemplo.menulateralconmapas.ui.home.HomeFragment"
@@ -22,7 +22,7 @@
         android:name="com.ejemplo.menulateralconmapas.ui.slideshow.SlideshowFragment"
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_slideshow" />
-
+-->
     <fragment
         android:id="@+id/mapaConUbicacionFragment"
         android:name="com.ejemplo.menulateralconmapas.MapaConUbicacionFragment"
